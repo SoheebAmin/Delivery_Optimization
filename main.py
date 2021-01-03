@@ -1,16 +1,24 @@
-# This is a sample Python script.
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
-
-
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+number = int(input("your number: "))
+number_to_make = int(input("Number to make: "))
 
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('Test for PyCharm 2')
+if 0 > number or number > number_to_make:
+    print("You can't select that number")
+else:
+    complement = None
+    i = 0
+    found_complement = False
+    while not found_complement:
+        if i + number == number_to_make:
+            complement = i
+            break
+        else:
+            i += 1
+print(f"The number to add to make {number_to_make} is {complement}")
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+
+
+
+
+
