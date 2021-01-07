@@ -1,6 +1,7 @@
 # Soheeb Amin's Delivery Optimization project. Student ID 001452292.
 
 import CSV_Import
+import Hashtable
 import Package
 
 # call the function to read the rows of the packages csv into a 2D array
@@ -35,4 +36,4 @@ truck_1 = [1, 13, 14, 15, 19, 16, 20, 29, 31, 34, 37, 40]  # Early deadline pack
 truck_2 = [3, 6, 9, 18, 25, 28, 32, 36, 38, 30, 33, 35, 39]  # delayed till 9:05 packages + misc conditions.
 truck_3 = [2, 4, 5, 7, 8, 10, 11, 12, 17, 21, 22, 23, 24, 26, 27, ]  # the rest, but last 4 added to truck 2.
 
-
+hash_t = Hashtable.HashTable(10_000_000_000)
