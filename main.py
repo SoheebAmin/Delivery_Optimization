@@ -18,16 +18,31 @@ hashtable = Hashtable.HashTable(60)
 current_time = datetime.time(8, 00, 00)
 
 
-# time objects don't allow you to add minutes, so this function was copied over from Stackoverflow question 59465525.
-def add_minutes(tm, minutes1):
-    fulldate = datetime.datetime(100, 1, 1, tm.hour, tm.minute, tm.second)
-    fulldate = fulldate + datetime.timedelta(minutes=minutes1)
-    return fulldate.time()
+def add_minutes(current_time_object, minutes_to_add):
+    """
+    :param current_time_object:
+    :param minutes_to_add:
+    :return: current_time_object with minutes updated by minutes_to_add
+    Complexity: O(1)
+
+    Time objects does not have an add time method, so this function was modified from question 59465525 on
+    Stackoverflow to take a time object and add a set amount of minutes to it.
+
+    """
+    full_date = datetime.datetime(100, 1, 1, current_time_object.hour, current_time_object.minute, current_time_object.second)
+    full_date = full_date + datetime.timedelta(minutes=minutes_to_add)
+    return full_date.time()
 
 
-# function to place each row of the matrix into a package object, which is then hashed into the hash table
 def create_and_hash_package_objects(matrix):
-    packages_list = []
+    """
+    :param matrix: 
+    :return: None
+    Complexity: O(n)
+
+    This function places each row of the provode matrix into a package object, which is then hashed into the hash table
+    """
+
     for inner_list in matrix:
         package = Package.Package(
             inner_list[0],  # ID
