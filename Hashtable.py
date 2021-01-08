@@ -9,16 +9,16 @@ class HashTable:
         self.table = []
         for i in range(buckets):
             self.table.append([])
-        print(self.table)
 
-    # Inserts a new item into the hash table.
-    def insert(self, item):
+    # Inserts packages into the hash table.
+    def insert(self, package):
         # get the bucket list where this item will go.
-        bucket = hash(item) % len(self.table)
+        bucket = hash(package) % len(self.table)
         bucket_list = self.table[bucket]
 
         # insert the item to the end of the bucket list.
-        bucket_list.append(item)
+        key_value_pair = [package.id, package]
+        bucket_list.append(key_value_pair)
 
     # Searches for an item with matching key in the hash table.
     # Returns the item if found, or None if not found.
@@ -46,5 +46,8 @@ class HashTable:
         if key in bucket_list:
             bucket_list.remove(key)
 
+    def display(self):
+        for item in self.table:
+            print(item)
 
 
