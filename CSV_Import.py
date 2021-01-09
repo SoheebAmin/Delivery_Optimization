@@ -2,27 +2,26 @@
 import csv
 import io
 
-def remove_zip(string):
+
+def remove_zip(address):
+    """ Takes as input an address with with a zip code at the end, returns the address without the zip code.
+
+    :param address:
+    :return: 
     """
-    :param string:
-    :return:
-    """
-    # split string
-    spl_string = string.split()
-    # remove the last item in list
-    rm = spl_string[:-1]
-    # convert list to string
-    listToStr = ' '.join([str(elem) for elem in rm])
-    return listToStr
+
+    split_string = address.split()  # split address into words
+    zip_removed_list = split_string[:-1]  # remove the last "word," which is the zip code.
+    new_address = ' '.join([str(elem) for elem in zip_removed_list])  # convert list to string with list comprehension
+    return new_address
 
 
-def get_data_from_csv(input_csv, remove_zip=False):
+def get_data_from_csv(input_csv):
     """
     This function goes through the given CSV files and puts each row into a single list, creating a 2D array
     Runtime:
 
     :param input_csv:
-    :param remove_zip:
     :return:
     """
 
@@ -30,9 +29,5 @@ def get_data_from_csv(input_csv, remove_zip=False):
     readCSV = csv.reader(csvfile, delimiter=",")
     data_list = []
     for row in readCSV:
-        if remove_zip:
-            for item in row:
-                print(item)
         data_list.append(row)
     return data_list
-

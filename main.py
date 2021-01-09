@@ -8,7 +8,7 @@ import Package
 # call the function to read the rows of the packages csv into a 2D array
 packages_matrix = CSV_Import.get_data_from_csv("Packages.csv")
 
-# call the same function for the distance table
+# call the same function for the distance table, using the optional parameter to strip the zip codes
 distance_matrix = CSV_Import.get_data_from_csv("Distance.csv")
 
 # initialize the hashtable
@@ -41,7 +41,7 @@ def create_and_hash_package_objects(matrix):
     :return: None
     Complexity: O(n)
 
-    This function places each row of the provode matrix into a package object, which is then hashed into the hash table
+    This function places each row of the provided matrix into a package object, which is then hashed into the hash table
     """
 
     for inner_list in matrix:
@@ -62,13 +62,29 @@ create_and_hash_package_objects(packages_matrix)
 
 
 def address_lookup(where_truck_is, where_truck_goes):
-    pass
+
 
 
 truck_1 = [1, 13, 14, 15, 19, 16, 20, 29, 31, 34, 37, 40]  # Early deadline packages and go-together packages.
 truck_2 = [3, 6, 9, 18, 25, 28, 32, 36, 38, 30, 33, 35, 39]  # delayed till 9:05 packages + misc conditions.
 truck_3 = [2, 4, 5, 7, 8, 10, 11, 12, 17, 21, 22, 23, 24, 26, 27]  # the rest, but last 4 added to truck 2.
 
-
-
-confirm_address_in_hashtable()
+# for row in distance_matrix:
+#     print(row)
+#
+#
+# def confirm_address_in_hashtable():
+#     for i in range(1, 41):
+#         package = hashtable.search(i)
+#         address_to_check = package.address
+#         found = False
+#         for item in distance_matrix[0]:
+#             item = CSV_Import.remove_zip(item)
+#             if address_to_check == item:
+#                 print(f"For id {i}, address {item} is confirmed!")
+#                 found = True
+#         if not found:
+#             print(f"{i} not found for address {address_to_check}")
+#
+#
+# confirm_address_in_hashtable()
