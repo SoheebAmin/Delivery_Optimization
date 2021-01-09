@@ -29,7 +29,8 @@ def add_minutes(current_time_object, minutes_to_add):
     Stackoverflow to take a time object and add a set amount of minutes to it.
 
     """
-    full_date = datetime.datetime(100, 1, 1, current_time_object.hour, current_time_object.minute, current_time_object.second)
+    full_date = datetime.datetime(100, 1, 1, current_time_object.hour, current_time_object.minute,
+                                  current_time_object.second)
     full_date = full_date + datetime.timedelta(minutes=minutes_to_add)
     return full_date.time()
 
@@ -45,7 +46,7 @@ def create_and_hash_package_objects(matrix):
 
     for inner_list in matrix:
         package = Package.Package(
-            inner_list[0],  # ID
+            int(inner_list[0]),  # ID, converted to Int
             inner_list[1],  # Address
             inner_list[2],  # City
             inner_list[3],  # State
@@ -59,7 +60,37 @@ def create_and_hash_package_objects(matrix):
 
 create_and_hash_package_objects(packages_matrix)
 
+
+def address_lookup(where_truck_is, where_truck_goes):
+    pass
+
+
 truck_1 = [1, 13, 14, 15, 19, 16, 20, 29, 31, 34, 37, 40]  # Early deadline packages and go-together packages.
 truck_2 = [3, 6, 9, 18, 25, 28, 32, 36, 38, 30, 33, 35, 39]  # delayed till 9:05 packages + misc conditions.
-truck_3 = [2, 4, 5, 7, 8, 10, 11, 12, 17, 21, 22, 23, 24, 26, 27, ]  # the rest, but last 4 added to truck 2.
+truck_3 = [2, 4, 5, 7, 8, 10, 11, 12, 17, 21, 22, 23, 24, 26, 27]  # the rest, but last 4 added to truck 2.
 
+def remove_zip(string):
+    # split string
+    spl_string = string.split()
+    # remove the last item in list
+    rm = spl_string[:-1]
+    # convert list to string
+    listToStr = ' '.join([str(elem) for elem in rm])
+    return listToStr
+
+
+
+def confirm_address_in_hashtable():
+    for i in range(1, 40):
+        package = hashtable.search(i)
+        address_to_check = package.address
+        for item in distance_matrix[0]:
+            item = remove_zip(item)
+            if address_to_check == item:
+                print(f"for id {i}, address {item} is confirmed")
+
+
+
+
+
+confirm_address_in_hashtable()
