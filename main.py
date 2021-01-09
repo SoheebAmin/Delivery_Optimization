@@ -69,28 +69,6 @@ truck_1 = [1, 13, 14, 15, 19, 16, 20, 29, 31, 34, 37, 40]  # Early deadline pack
 truck_2 = [3, 6, 9, 18, 25, 28, 32, 36, 38, 30, 33, 35, 39]  # delayed till 9:05 packages + misc conditions.
 truck_3 = [2, 4, 5, 7, 8, 10, 11, 12, 17, 21, 22, 23, 24, 26, 27]  # the rest, but last 4 added to truck 2.
 
-def remove_zip(string):
-    # split string
-    spl_string = string.split()
-    # remove the last item in list
-    rm = spl_string[:-1]
-    # convert list to string
-    listToStr = ' '.join([str(elem) for elem in rm])
-    return listToStr
-
-
-
-def confirm_address_in_hashtable():
-    for i in range(1, 40):
-        package = hashtable.search(i)
-        address_to_check = package.address
-        for item in distance_matrix[0]:
-            item = remove_zip(item)
-            if address_to_check == item:
-                print(f"for id {i}, address {item} is confirmed")
-
-
-
 
 
 confirm_address_in_hashtable()
