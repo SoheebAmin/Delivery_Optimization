@@ -94,7 +94,13 @@ def distance_to_next_address(current_package_location, destination):
             break
         else:  # if not, then update to next index, which will be checked next iteration
             index += 1
-    print(current_address_row[index])
+    if not current_address_row:
+        print("blank!")
+        return -1
+    distance = current_address_row[index]
+    print(distance)
+    distance_as_float = float(distance)
+    return distance_as_float
 
 
 def determine_shortest_address(current_address, truck):
@@ -107,22 +113,31 @@ def determine_shortest_address(current_address, truck):
     This function takes the current addres of the truck, examines its current contents, and determines the next best
     location to travel to based on the nearest neighbor algorithm.
     """
+    next_address = ""
+    shortest_distance = 999
     for package_id in truck:
         package = hashtable.search(package_id)
         if package.address != current_address:  # ignores any package that has the same address as the current one.
-            distance_to_next_address(current_address, package.address)
+            distance = distance_to_next_address(current_address, package.address)
+            if distance < shortest_distance:
+                next_address = package.address
+                shortest_distance = distance
+    return next_address
 
 
 truck_1 = [1, 13, 14, 15, 19, 16, 20, 29, 31, 34, 37, 40]  # Early deadline packages and go-together packages.
 truck_2 = [3, 6, 9, 18, 25, 28, 32, 36, 38, 30, 33, 35, 39]  # delayed till 9:05 packages + misc conditions.
 truck_3 = [2, 4, 5, 7, 8, 10, 11, 12, 17, 21, 22, 23, 24, 26, 27]  # the rest, but last 4 added to truck 2.
 
-# determine_shortest_address('Hub', truck_1)
+print(f"shortest: {determine_shortest_address('HUB', truck_1)}")
 
-a = ""
-b = ""
 
-distance_to_next_address(a, b)
+# TESTING DISTANCE_TO_NEXT_ADDRESS():
+# with_zip = distance_matrix[0][3]  # sample starting address. Has a zip attached
+# a = CSV_Import.remove_zip(with_zip)  # I have to remove zip to make comparison
+# package = hashtable.search(3)  # sample random package
+# b = package.address  # sample destination from said package
+# distance_to_next_address(a, b)
 
 
 # for row in distance_matrix:
