@@ -18,10 +18,24 @@ hashtable = Hashtable.HashTable(60)
 current_time = datetime.time(8, 00, 00)
 
 
+def minutes_passed(miles_to_travel):
+    """
+    :param miles_to_travel
+    :return: The minutes it will take to travel given miles
+    Complexity: O(1)
+
+    This function takes in the miles a truck needs to travel to its next destination, and returns the number of minutes
+    the travel will take.
+    """
+    truck_speed = 18  # the given MPH of the truck.
+    minutes = (miles_to_travel / truck_speed) * 60
+    return minutes
+
+
 def add_minutes(current_time_object, minutes_to_add):
     """
-    :param current_time_object:
-    :param minutes_to_add:
+    :param current_time_object
+    :param minutes_to_add
     :return: current_time_object with minutes updated by minutes_to_add
     Complexity: O(1)
 
@@ -60,40 +74,34 @@ def create_and_hash_package_objects(matrix):
 
 create_and_hash_package_objects(packages_matrix)
 
-
-def time_passed(distance_to_travel):
-    pass
-
-
 truck_1 = [1, 13, 14, 15, 19, 16, 20, 29, 31, 34, 37, 40]  # Early deadline packages and go-together packages.
 truck_2 = [3, 6, 9, 18, 25, 28, 32, 36, 38, 30, 33, 35, 39]  # delayed till 9:05 packages + misc conditions.
 truck_3 = [2, 4, 5, 7, 8, 10, 11, 12, 17, 21, 22, 23, 24, 26, 27]  # the rest, but last 4 added to truck 2.
 
-
-def distance_to_next_address():
-    with_zip = distance_matrix[0][1]  # sample starting address. Has a zip attached
-    current_package_location = CSV_Import.remove_zip(with_zip)  # I have to remove zip to make comparison
-    package = hashtable.search(1)  # sample random package
-    destination = package.address  # sample destination from said package
-    print(f"starting at {current_package_location}, ending at {destination}")  # shows starting and ending address
-    current_address_row = []  # initialize variable for row check
-    for row in distance_matrix:  # iterate over rows in distance table
-        start = CSV_Import.remove_zip(row[0])  # gets first index which is address, strip the zip code.
-        if start == current_package_location:  # if the address matches current location, distance in this row
-            current_address_row = row  # sets this row as the one to check and breaks
-            break
-    destination_address_row = distance_matrix[0]  # the matching destination is found in the matrix's first index
-    index = 0  # variable to count which index we need to get the distances in the current address row
-    for address in destination_address_row:  # iterate over the destination row
-        end = CSV_Import.remove_zip(address)  # removes the zip for the address to check
-        if end == destination:  # if we found the address, break, since we found the correct index
-            break
-        else:  # if not, then update to next index, which will be checked next iteration
-            index += 1
-    print(current_address_row[index])
-
-
-distance_to_next_address()
+# def distance_to_next_address():
+#     with_zip = distance_matrix[0][1]  # sample starting address. Has a zip attached
+#     current_package_location = CSV_Import.remove_zip(with_zip)  # I have to remove zip to make comparison
+#     package = hashtable.search(1)  # sample random package
+#     destination = package.address  # sample destination from said package
+#     print(f"starting at {current_package_location}, ending at {destination}")  # shows starting and ending address
+#     current_address_row = []  # initialize variable for row check
+#     for row in distance_matrix:  # iterate over rows in distance table
+#         start = CSV_Import.remove_zip(row[0])  # gets first index which is address, strip the zip code.
+#         if start == current_package_location:  # if the address matches current location, distance in this row
+#             current_address_row = row  # sets this row as the one to check and breaks
+#             break
+#     destination_address_row = distance_matrix[0]  # the matching destination is found in the matrix's first index
+#     index = 0  # variable to count which index we need to get the distances in the current address row
+#     for address in destination_address_row:  # iterate over the destination row
+#         end = CSV_Import.remove_zip(address)  # removes the zip for the address to check
+#         if end == destination:  # if we found the address, break, since we found the correct index
+#             break
+#         else:  # if not, then update to next index, which will be checked next iteration
+#             index += 1
+#     print(current_address_row[index])
+#
+#
+# distance_to_next_address()
 
 # for row in distance_matrix:
 #     print(row)
