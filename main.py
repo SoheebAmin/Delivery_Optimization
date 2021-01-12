@@ -79,7 +79,7 @@ def distance_to_next_address(current_package_location, destination):
     """
     :return: the distance in miles to the next address
     """
-    print(f"starting at {current_package_location}, ending at {destination}")  # shows starting and ending address
+    # print(f"starting at {current_package_location}, ending at {destination}")  # shows starting and ending address
     current_address_row = []  # initialize variable for row check
     for row in distance_matrix:  # iterate over rows in distance table
         start = CSV_Import.remove_zip(row[0])  # gets first index which is address, strip the zip code.
@@ -95,10 +95,9 @@ def distance_to_next_address(current_package_location, destination):
         else:  # if not, then update to next index, which will be checked next iteration
             index += 1
     if not current_address_row:
-        print("blank!")
+        print("no row matched!")
         return -1
     distance = current_address_row[index]
-    print(distance)
     distance_as_float = float(distance)
     return distance_as_float
 
@@ -113,24 +112,52 @@ def determine_shortest_address(current_address, truck):
     This function takes the current addres of the truck, examines its current contents, and determines the next best
     location to travel to based on the nearest neighbor algorithm.
     """
-    next_address = ""
-    shortest_distance = 999
-    for package_id in truck:
-        package = hashtable.search(package_id)
+    next_address = ""  # initialize next address
+    shortest_distance = float("inf")  # initialize the shortest distance, default at infinity before comparisons made.
+    for package_id in truck:  # iterate over the IDs in the truck
+        package = hashtable.search(package_id)  # use the hashtable to grab the correct package
         if package.address != current_address:  # ignores any package that has the same address as the current one.
-            distance = distance_to_next_address(current_address, package.address)
-            if distance < shortest_distance:
-                next_address = package.address
-                shortest_distance = distance
-    return next_address
+            distance = distance_to_next_address(current_address, package.address)  # calls func. for dist. for each
+            if distance < shortest_distance:  # if the distance of this package is less than the current lowest...
+                next_address = package.address  # mark it as the next address to go to
+                shortest_distance = distance  # and update the shortest distance variable
+    print(f"Started at {current_address}, ended at {next_address}, which was {shortest_distance} miles")
+    return [next_address, shortest_distance]  # return the shortest distance of them all
 
 
 truck_1 = [1, 13, 14, 15, 19, 16, 20, 29, 31, 34, 37, 40]  # Early deadline packages and go-together packages.
 truck_2 = [3, 6, 9, 18, 25, 28, 32, 36, 38, 30, 33, 35, 39]  # delayed till 9:05 packages + misc conditions.
 truck_3 = [2, 4, 5, 7, 8, 10, 11, 12, 17, 21, 22, 23, 24, 26, 27]  # the rest, but last 4 added to truck 2.
 
-print(f"shortest: {determine_shortest_address('HUB', truck_1)}")
 
+def simple_truck_delivery(truck):
+    next_location_info = determine_shortest_address('HUB', truck)
+    next_location = next_location_info[0]
+    total_miles_travelled = next_location_info[1]
+    while truck:
+        packages_in_location = []
+        for package_id in truck:
+            package = hashtable.search(package_id)
+            if package.address == next_location:
+                packages_in_location.append(package)
+            for package in packages_in_location:
+                if package.id in truck:
+                    truck.remove(package_id)
+        print(f"d_s_a({next_location},{truck})")
+        if truck:
+            next_location_info = determine_shortest_address(next_location, truck)
+            next_location = next_location_info[0]
+            total_miles_travelled += next_location_info[1]
+            print(f"total miles so far {total_miles_travelled}")
+        else:
+            miles_to_hub = distance_to_next_address(next_location, 'HUB')
+            total_miles_travelled += miles_to_hub
+            print(f"Finally, returned to hub from {next_location}, in {miles_to_hub} miles, total {total_miles_travelled}")
+
+
+
+
+simple_truck_delivery(truck_3)
 
 # TESTING DISTANCE_TO_NEXT_ADDRESS():
 # with_zip = distance_matrix[0][3]  # sample starting address. Has a zip attached
