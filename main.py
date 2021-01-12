@@ -131,6 +131,13 @@ truck_3 = [2, 4, 5, 7, 8, 10, 11, 12, 17, 21, 22, 23, 24, 26, 27]  # the rest, b
 
 
 def simple_truck_delivery(truck):
+    """
+    :param truck: The truck which needs to run deliveries
+    :return: None.
+    Complexity: TODO!!!!!!!!!
+
+    This function...
+    """
     next_location_info = determine_shortest_address('HUB', truck)  # call func to get nearest address + dist from hub
     delivery_location = next_location_info[0]  # store nearest address in variable
     total_miles_travelled = next_location_info[1]  # add distance to our distance counter
@@ -145,20 +152,18 @@ def simple_truck_delivery(truck):
             # TO DO: ACTUALLY DELIVER THEM BY UPDATING HASHTABLE
             truck.remove(package.id)  # check off the packages that were just delivered
         print(f"The truck just delivered to {delivery_location}, and has {len(truck)} packages: {truck})")
-        if truck:
+        if truck:  # if not empty, updates delivery and distance info for next run of iteration
             next_location_info = determine_shortest_address(delivery_location, truck)
             delivery_location = next_location_info[0]
             total_miles_travelled += next_location_info[1]
             print(f"total miles so far {total_miles_travelled}")
-        else:
+        else:  # if it is empty, sends the truck to the hub and updates the distance.
             miles_to_hub = distance_to_next_address(delivery_location, 'HUB')
             total_miles_travelled += miles_to_hub
             print(f"Returned to hub from {delivery_location}, in {miles_to_hub} miles, total {total_miles_travelled}")
 
 
-
-
-simple_truck_delivery(truck_1)
+simple_truck_delivery(truck_3)
 
 # TESTING DISTANCE_TO_NEXT_ADDRESS():
 # with_zip = distance_matrix[0][3]  # sample starting address. Has a zip attached
