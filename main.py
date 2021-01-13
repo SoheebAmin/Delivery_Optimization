@@ -14,6 +14,9 @@ distance_matrix = CSV_Import.get_data_from_csv("Distance.csv")
 # initialize the hashtable
 hashtable = Hashtable.HashTable(100)
 
+# A variable to be set by the user for if step-by-step print statements should be visible.
+show_status = True
+
 
 def minutes_passed(miles_to_travel):
     """
@@ -183,6 +186,7 @@ def execute_truck_delivery(truck, departing_time, status_statements):
                 print(f"Arrival Time: {current_time}\n")
     return [current_time, total_miles_travelled]
 
+
 def verify_delivery_on_time():
     """
     :return:
@@ -217,9 +221,6 @@ def verify_delivery_on_time():
         print(f"{len(failure_list)} packages failed to be on time: {failure_list}")
     return delivery_success
 
-
-
-show_status = True
 
 # Set the departure time for the first two trucks
 depart_time_for_truck_1 = datetime.time(8, 00, 00)
