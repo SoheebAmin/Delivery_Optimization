@@ -1,6 +1,5 @@
-# This hash table is a modified version of ChainingHashTable one provided in the ZyBooks' textbook from Chapter 7.8.
-
-# method to add / lookup / delete all go here.
+# This hash table is based om ChainingHashTable one provided in the ZyBooks' textbook from Chapter 7.8.
+# The
 
 class HashTable:
 

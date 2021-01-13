@@ -124,12 +124,15 @@ def determine_shortest_address(current_address, truck):
     return [next_address, shortest_distance]  # return the address to go to next, and the distance that it would take.
 
 
-truck_1 = [1, 13, 14, 15, 19, 16, 20, 29, 31, 34, 37, 40]  # Early deadline packages and go-together packages.
-truck_2 = [3, 6, 9, 18, 25, 28, 32, 36, 38, 30, 33, 35, 39]  # delayed till 9:05 packages + wrong address, only truck 2
-truck_3 = [2, 4, 5, 7, 8, 10, 11, 12, 17, 21, 22, 23, 24, 26, 27]  # the rest, but last 4 added to truck 2.
+truck_1 = [1, [1, 13, 14, 15, 19, 16, 20, 29, 31, 34, 37, 40]] # Early deadline packages and go-together packages.
+truck_2 = [2, [3, 6, 18, 25, 26, 27, 28, 32, 36, 38, 30, 33, 35, 39]]  # delayed till 9:05, wrong address, only truck 2
+truck_3 = [3, [2, 4, 5, 7, 8, 9, 10, 11, 12, 17, 21, 22, 23, 24]]  # the rest, but last 6 added to truck 2.
+
+def update_address(address_to_update, package):
+    package
 
 
-def execute_truck_delivery(truck, departing_time, status_statements):
+def execute_truck_delivery(truck_with_number, departing_time, status_statements):
     """
     :param status_statements: a boolean which either turns the status statements on or off.
     :param departing_time: The time the truck will leave to start deliveries
@@ -139,6 +142,7 @@ def execute_truck_delivery(truck, departing_time, status_statements):
 
     This function...
     """
+    truck = truck_with_number[1]
     if status_statements:
         truck_number = truck[0]
         print(f"\nSTARTING DELIVERY FOR TRUCK {truck_number}: {len(truck)} packages\n")
@@ -230,12 +234,12 @@ depart_time_for_truck_2 = datetime.time(9, 0o5, 00)
 time_and_distance_after_truck_1 = execute_truck_delivery(truck_1, depart_time_for_truck_1, show_status)
 
 # Sets truck 3's departure time based on truck 1's arrival time (driver of truck 1 takes over truck 3)
-depart_time_for_truck_3 = time_and_distance_after_truck_1[0]
+depart_time_for_truck_3 = add_minutes(time_and_distance_after_truck_1[0], 60)
 
 # Execute deliveries for truck 2, and saves the information about its time and distance:
 time_and_distance_after_truck_2 = execute_truck_delivery(truck_2, depart_time_for_truck_1, show_status)
 
-# Execute deliveries for truck 3, starting at the time truck 1 arrives
+# Execute deliveries for truck 3, starting at the time truck 1 arrives + 1 hour to allow for package time correction
 time_and_distance_after_truck_3 = execute_truck_delivery(truck_3, depart_time_for_truck_3, show_status)
 
 # The total miles for each truck as found in the second item in the returned list after delivery.
