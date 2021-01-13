@@ -205,25 +205,28 @@ def verify_delivery_on_time():
     """
     delivery_success = True  # assumes true, but will change to false if delivery error detected
     failure_list = []  # a list to hold the ID of failed packages, if any.
-    for bucket in hashtable.table:
-        if bucket:
-            for kv_pair in bucket:
-                package = kv_pair[1]
-                p_id = package.id
-                time_delivered = package.delivery_time
-                required_time_raw = package.deadline
-                if required_time_raw != 'EOD':
-                    as_list = required_time_raw.split()
-                    time_alone = as_list[0]
-                    required_time = datetime.datetime.strptime(time_alone, '%H:%M').time()
+    delivery_count = 0  # variable to count how many packages have a delivery time.
+    for bucket in hashtable.table:  # iterate over buckets
+        if bucket:  # ignore empty buckets
+            for kv_pair in bucket:  # for each key/value pair in the bucket...
+                package = kv_pair[1]  # grab the package object
+                p_id = package.id   # note the ID
+                time_delivered = package.delivery_time  # store the recoded time of delivery
+                if time_delivered:  # if the package was delivered (which all should be)
+                    delivery_count += 1  # add the counter (which should total 40 by the end)
+                required_time_raw = package.deadline  # grab the string which contains the deadline from the package.
+                if required_time_raw != 'EOD':  # for 'EOD', there is no deadline so are on time as long as delivered.
+                    as_list = required_time_raw.split()  # split the string which contains the time into a list
+                    time_alone = as_list[0]  # grab the time itself.
+                    required_time = datetime.datetime.strptime(time_alone, '%H:%M').time()  # convert it to time object.
                     if required_time < time_delivered:  # if the delivery is later than the required time:
                         print(f"package with id {p_id} delivered at {time_delivered}, but deadline was {required_time}")
-                        failure_list.append(package.id)
-                        delivery_success = False
-    if delivery_success:
-        print("All packages were delivered before their deadlines.")
-    else:
-        print(f"Delivery failures for packages {failure_list}")
+                        failure_list.append(package.id)  # add it to the failure list.
+                        delivery_success = False  # set success to false
+    if delivery_success:  # if success still remains true after that loop...
+        print(f"{delivery_count} packages were delivered, and all met their deadlines.")
+    else: # if not, print failures and return false.
+        print(f"{len(failure_list)} packages failed to be on time: {failure_list}")
     return delivery_success
 
 
