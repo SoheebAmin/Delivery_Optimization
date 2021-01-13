@@ -118,7 +118,6 @@ def determine_shortest_address(current_address, truck):
             if distance < shortest_distance:  # if the distance of this package is less than the current lowest...
                 next_address = package.address  # mark it as the next address to go to
                 shortest_distance = distance  # and update the shortest distance variable
-    print(f"NN found from {current_address}, go to {next_address}, distance of {shortest_distance} miles")
     return [next_address, shortest_distance]  # return the address to go to next, and the distance that it would take.
 
 
@@ -139,15 +138,15 @@ def execute_truck_delivery(truck, departing_time, status_statements):
     """
     if status_statements:
         truck_number = truck[0]
-        print(f"\nSTARTING DELIVERY FOR TRUCK {truck_number}")
+        print(f"\nSTARTING DELIVERY FOR TRUCK {truck_number}: {len(truck)} packages\n")
     current_time = departing_time  # marks the starting time as the time the truck is set to depart
     next_location_info = determine_shortest_address('HUB', truck)  # call func to get nearest address + dist from hub
     delivery_location = next_location_info[0]  # store nearest address in variable
     total_miles_travelled = next_location_info[1]  # add distance to our distance counter
     minutes_to_add = minutes_passed(total_miles_travelled)  # using the distance travelled, get how many minutes passed
-    current_time = add_minutes(current_time, minutes_to_add)  # move clock up by the calculated minutes that passed
     if status_statements:
-        print(f"TIME AFTER GOING TO {delivery_location}: {current_time}")
+        print(f"Departing from Hub. Nearest neighbour: {delivery_location}, which is {total_miles_travelled} away")
+    current_time = add_minutes(current_time, minutes_to_add)  # move clock up by the calculated minutes that passed
     while truck:  # while the truck has not been emptied
         unload_for_delivery = []  # list to hold all packages in the same location
         for package_id in truck:  # iterate over IDs in truck
@@ -155,15 +154,16 @@ def execute_truck_delivery(truck, departing_time, status_statements):
             if package.address == delivery_location:  # if the address on the package matches our delivery location...
                 unload_for_delivery.append(package)  # then we add them to the list of packages we unload for deliver
         for package in unload_for_delivery:  # iterate over packages to be delivered
-            if status_statements:
-                print(f"state of truck{truck}, package to deliver: {package.id}")
+            # if status_statements:
+            # print(f"state of truck{truck}, package to deliver: {package.id}")
             hashtable.remove(package.id)  # remove the old version of the package from the hashtable
             package.delivery_time = current_time  # add the delivery time to the package
             hashtable.insert(package)  # insert the delivered package back into the hash table
-            {f"package with ID {package.id} delivered at {current_time}."}
+            if status_statements:
+                print(f"package with ID {package.id} delivered at {current_time}.")
             truck.remove(package.id)  # check off the packages that were just delivered
         if status_statements:
-            print(f"The truck just delivered to {delivery_location}, and has {len(truck)} packages: {truck})")
+            print(f"Delivery to {delivery_location} complete. {len(truck)} packages left: {truck}\n")
         if truck:  # if not empty, updates delivery and distance info for next run of iteration
             next_location_info = determine_shortest_address(delivery_location, truck)
             delivery_location = next_location_info[0]
@@ -172,16 +172,15 @@ def execute_truck_delivery(truck, departing_time, status_statements):
             minutes_to_add = minutes_passed(miles_to_travel)  # get the time it takes to go the next location
             current_time = add_minutes(current_time, minutes_to_add)  # and add it to the current time
             if status_statements:
-                print(f"TIME AFTER GOING TO {delivery_location}: {current_time}")
-                print(f"total miles so far {total_miles_travelled}")
+                print(f"Next nearest neighbour: {delivery_location}, which is {miles_to_travel} away")
         else:  # if it is empty...
             miles_to_hub = distance_to_next_address(delivery_location, 'HUB')  # gets the miles to the hub
             total_miles_travelled += miles_to_hub  # adds the miles to the total
             minutes_to_add = minutes_passed(miles_to_hub)  # get the time it takes to get back to the hub
             current_time = add_minutes(current_time, minutes_to_add)  # and add it to the final time.
             if status_statements:
-                print(f"TIME AFTER RETURN TO HUB: {current_time}")
                 print(f"Returned to hub from {delivery_location}, in {miles_to_hub} miles, total {total_miles_travelled}")
+                print(f"Arrival Time: {current_time}\n")
     return current_time
 
 
