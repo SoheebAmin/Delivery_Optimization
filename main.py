@@ -122,7 +122,7 @@ def determine_shortest_address(current_address, truck):
 
 
 truck_1 = [1, 13, 14, 15, 19, 16, 20, 29, 31, 34, 37, 40]  # Early deadline packages and go-together packages.
-truck_2 = [3, 6, 9, 18, 25, 28, 32, 36, 38, 30, 33, 35, 39]  # delayed till 9:05 packages + misc conditions.
+truck_2 = [3, 6, 9, 18, 25, 28, 32, 36, 38, 30, 33, 35, 39]  # delayed till 9:05 packages + wrong address, only truck 2
 truck_3 = [2, 4, 5, 7, 8, 10, 11, 12, 17, 21, 22, 23, 24, 26, 27]  # the rest, but last 4 added to truck 2.
 
 
@@ -181,27 +181,15 @@ def execute_truck_delivery(truck, departing_time, status_statements):
             if status_statements:
                 print(f"Returned to hub from {delivery_location}, in {miles_to_hub} miles, total {total_miles_travelled}")
                 print(f"Arrival Time: {current_time}\n")
-    return current_time
-
-
-depart_time_for_truck_1 = datetime.time(8, 00, 00)
-depart_time_for_truck_2 = datetime.time(9, 0o5, 00)
-
-# Sends off truck one, and saves the return value (the return time) as input for truck three's departure time
-
-show_status = True
-
-depart_time_for_truck_3 = execute_truck_delivery(truck_1, depart_time_for_truck_1, show_status)
-
-execute_truck_delivery(truck_2, depart_time_for_truck_1, show_status)
-
-execute_truck_delivery(truck_3, depart_time_for_truck_3, show_status)
-
+    return [current_time, total_miles_travelled]
 
 def verify_delivery_on_time():
     """
     :return:
     Comlexity: O(n^2)
+
+    This function will iterate over the hash table after deliveries, and check delivery time objects against the
+    required times of delivery (which are converted from strings to time objects) to ensure all deliveries are on time.
     """
     delivery_success = True  # assumes true, but will change to false if delivery error detected
     failure_list = []  # a list to hold the ID of failed packages, if any.
@@ -228,6 +216,35 @@ def verify_delivery_on_time():
     else: # if not, print failures and return false.
         print(f"{len(failure_list)} packages failed to be on time: {failure_list}")
     return delivery_success
+
+
+
+show_status = True
+
+# Set the departure time for the first two trucks
+depart_time_for_truck_1 = datetime.time(8, 00, 00)
+depart_time_for_truck_2 = datetime.time(9, 0o5, 00)
+
+# Execute deliveries for truck 1, and saves the the time after deliveries, and the total miles travelled.
+time_and_distance_after_truck_1 = execute_truck_delivery(truck_1, depart_time_for_truck_1, show_status)
+
+# Sets truck 3's departure time based on truck 1's arrival time (driver of truck 1 takes over truck 3)
+depart_time_for_truck_3 = time_and_distance_after_truck_1[0]
+
+# Execute deliveries for truck 2, and saves the information about its time and distance:
+time_and_distance_after_truck_2 = execute_truck_delivery(truck_2, depart_time_for_truck_1, show_status)
+
+# Execute deliveries for truck 3, starting at the time truck 1 arrives
+time_and_distance_after_truck_3 = execute_truck_delivery(truck_3, depart_time_for_truck_3, show_status)
+
+# The total miles for each truck as found in the second item in the returned list after delivery.
+truck_1_miles = time_and_distance_after_truck_1[1]
+truck_2_miles = time_and_distance_after_truck_2[1]
+truck_3_miles = time_and_distance_after_truck_3[1]
+
+# Total miles by the end of deliveries, as optimized by the nearest neighbor algorithm
+combine_miles = truck_1_miles + truck_2_miles + truck_3_miles
+print(f"\nThe total miles travalled by all three trucks: {combine_miles}")
 
 
 verify_delivery_on_time()
