@@ -245,7 +245,7 @@ truck_3_miles = time_and_distance_after_truck_3[1]
 
 # Total miles by the end of deliveries, as optimized by the nearest neighbor algorithm
 combine_miles = truck_1_miles + truck_2_miles + truck_3_miles
-print(f"\nThe total miles travalled by all three trucks: {combine_miles}")
+print(f"\nThe total miles travelled by all three trucks: {combine_miles}")
 
 
 verify_delivery_on_time()
