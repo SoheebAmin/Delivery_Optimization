@@ -13,7 +13,7 @@ class HashTable:
     # Inserts packages into the hash table.
     def insert(self, package):
         # get the bucket list where this item will go, using its ID as a key
-        bucket = hash(package.id) % len(self.table)
+        bucket = (package.id**2 * 50331653) % len(self.table)  # hash function: square and multiply by a large prime.
         bucket_list = self.table[bucket]
 
         # insert the item to the end of the bucket list.
@@ -24,7 +24,7 @@ class HashTable:
     # If so,returns the item. If not, returns None
     def lookup(self, key):
         # get the bucket list where this key would be.
-        bucket = hash(key) % len(self.table)
+        bucket = (key**2 * 50331653) % len(self.table)
         bucket_list = self.table[bucket]
 
         # search for the key in the bucket list by iterating over every key-value pair and checking the keys.
@@ -39,7 +39,7 @@ class HashTable:
     # Removes an item with matching key from the hash table. WRONG!
     def remove(self, key):
         # get the bucket list where this item will be removed from.
-        bucket = hash(key) % len(self.table)
+        bucket = (key ** 2 * 50331653) % len(self.table)
         bucket_list = self.table[bucket]
 
         # search for the key in the bucket list by iterating over every key-value pair and checking the keys.

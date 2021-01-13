@@ -12,7 +12,7 @@ packages_matrix = CSV_Import.get_data_from_csv("Packages.csv")
 distance_matrix = CSV_Import.get_data_from_csv("Distance.csv")
 
 # initialize the hashtable
-hashtable = Hashtable.HashTable(60)
+hashtable = Hashtable.HashTable(100)
 
 
 def minutes_passed(miles_to_travel):
@@ -127,15 +127,16 @@ truck_2 = [3, 6, 9, 18, 25, 28, 32, 36, 38, 30, 33, 35, 39]  # delayed till 9:05
 truck_3 = [2, 4, 5, 7, 8, 10, 11, 12, 17, 21, 22, 23, 24, 26, 27]  # the rest, but last 4 added to truck 2.
 
 
-def execute_truck_delivery(truck):
+def execute_truck_delivery(truck, departing_time):
     """
+    :param departing_time: The time the truck will leave to start deliveries
     :param truck: The truck which needs to run deliveries
     :return: The time after the deliveries have completed.
     Complexity: TODO!!!!!!!!!
 
     This function...
     """
-    current_time = datetime.time(8, 00, 00) # the time at the start of the day
+    current_time = departing_time  # marks the starting time as the time the truck is set to depart
     next_location_info = determine_shortest_address('HUB', truck)  # call func to get nearest address + dist from hub
     delivery_location = next_location_info[0]  # store nearest address in variable
     total_miles_travelled = next_location_info[1]  # add distance to our distance counter
@@ -150,8 +151,9 @@ def execute_truck_delivery(truck):
                 unload_for_delivery.append(package)  # then we add them to the list of packages we unload for deliver
         for package in unload_for_delivery:  # iterate over packages to be delivered
             # print(f"state of truck{truck}, package to deliver: {package.id})
-            # TO DO: ACTUALLY DELIVER THEM BY UPDATING HASHTABLE
-            hashtable.remove()
+            hashtable.remove(package.id)  # remove the old version of the package from the hashtable
+            package.delivery_time = current_time  # add the delivery time to the package
+            hashtable.insert(package)  # insert the delivered package back into the hash table
             {f"package with ID {package.id} delivered at {current_time}."}
             truck.remove(package.id)  # check off the packages that were just delivered
         print(f"The truck just delivered to {delivery_location}, and has {len(truck)} packages: {truck})")
@@ -174,12 +176,53 @@ def execute_truck_delivery(truck):
     return current_time
 
 
-# execute_truck_delivery(truck_2)
+depart_time_for_truck_1 = datetime.time(8, 00, 00)
+depart_time_for_truck_2 = datetime.time(9, 0o5, 00)
 
-hashtable.display()
+# Sends off truck one, and saves the return value (the return time) as input for truck three's departure time
+depart_time_for_truck_3 = execute_truck_delivery(truck_1, depart_time_for_truck_1)
+
+execute_truck_delivery(truck_2, depart_time_for_truck_1)
+
+execute_truck_delivery(truck_3, depart_time_for_truck_3)
 
 
+def verify_delivery_on_time():
+    """
+    :return:
+    Comlexity: O(n^2)
+    """
+    delivery_success = True  # assumes true, but will change to false if delivery error detected
+    failure_list = []  # a list to hold the ID of failed packages, if any.
+    for bucket in hashtable.table:
+        if bucket:
+            for kv_pair in bucket:
+                package = kv_pair[1]
+                p_id = package.id
+                time_delivered = package.delivery_time
+                required_time_raw = package.deadline
+                if required_time_raw != 'EOD':
+                    as_list = required_time_raw.split()
+                    time_alone = as_list[0]
+                    required_time = datetime.datetime.strptime(time_alone, '%H:%M').time()
+                    if required_time < time_delivered:  # if the delivery is later than the required time:
+                        print(f"package with id {p_id} delivered at {time_delivered}, but deadline was {required_time}")
+                        failure_list.append(package.id)
+                        delivery_success = False
+    if delivery_success:
+        print("All packages were delivered before their deadlines.")
+    else:
+        print(f"Delivery failures for packages {failure_list}")
+    return delivery_success
 
+
+verify_delivery_on_time()
+
+#     if bucket:
+#         for kv_pair in bucket:
+#             id = kv_pair[1].id
+#             time_delivered = kv_pair[1].delivery_time
+#             print(f"package with id {id} was delivered at {time_delivered}")
 
 
 # TESTING DISTANCE_TO_NEXT_ADDRESS():
