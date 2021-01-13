@@ -22,7 +22,7 @@ class HashTable:
 
     # Searches the first index of every item in the hashtable to see if it is the key of the hashed item.
     # If so,returns the item. If not, returns None
-    def search(self, key):
+    def lookup(self, key):
         # get the bucket list where this key would be.
         bucket = hash(key) % len(self.table)
         bucket_list = self.table[bucket]
@@ -36,15 +36,17 @@ class HashTable:
             # the key is not found.
             return None
 
-    # Removes an item with matching key from the hash table.
+    # Removes an item with matching key from the hash table. WRONG!
     def remove(self, key):
         # get the bucket list where this item will be removed from.
         bucket = hash(key) % len(self.table)
         bucket_list = self.table[bucket]
 
-        # remove the item from the bucket list if it is present.
-        if key in bucket_list:
-            bucket_list.remove(key)
+        # search for the key in the bucket list by iterating over every key-value pair and checking the keys.
+        if bucket_list:
+            for hashed_item in bucket_list:
+                if hashed_item[0] == key:
+                    return bucket_list.remove(hashed_item)
 
     def display(self):
         for item in self.table:

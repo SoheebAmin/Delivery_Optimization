@@ -14,9 +14,6 @@ distance_matrix = CSV_Import.get_data_from_csv("Distance.csv")
 # initialize the hashtable
 hashtable = Hashtable.HashTable(60)
 
-# start the day
-current_time = datetime.time(8, 00, 00)
-
 
 def minutes_passed(miles_to_travel):
     """
@@ -115,7 +112,7 @@ def determine_shortest_address(current_address, truck):
     next_address = ""  # initialize next address
     shortest_distance = float("inf")  # initialize the shortest distance, default at infinity before comparisons made.
     for package_id in truck:  # iterate over the IDs in the truck
-        package = hashtable.search(package_id)  # use the hashtable to grab the correct package
+        package = hashtable.lookup(package_id)  # use the hashtable to grab the correct package
         if package.address != current_address:  # ignores any package that has the same address as the current one.
             distance = distance_to_next_address(current_address, package.address)  # calls func. for dist. for each
             if distance < shortest_distance:  # if the distance of this package is less than the current lowest...
@@ -130,40 +127,60 @@ truck_2 = [3, 6, 9, 18, 25, 28, 32, 36, 38, 30, 33, 35, 39]  # delayed till 9:05
 truck_3 = [2, 4, 5, 7, 8, 10, 11, 12, 17, 21, 22, 23, 24, 26, 27]  # the rest, but last 4 added to truck 2.
 
 
-def simple_truck_delivery(truck):
+def execute_truck_delivery(truck):
     """
     :param truck: The truck which needs to run deliveries
-    :return: None.
+    :return: The time after the deliveries have completed.
     Complexity: TODO!!!!!!!!!
 
     This function...
     """
+    current_time = datetime.time(8, 00, 00) # the time at the start of the day
     next_location_info = determine_shortest_address('HUB', truck)  # call func to get nearest address + dist from hub
     delivery_location = next_location_info[0]  # store nearest address in variable
     total_miles_travelled = next_location_info[1]  # add distance to our distance counter
+    minutes_to_add = minutes_passed(total_miles_travelled)  # using the distance travelled, get how many minutes passed
+    current_time = add_minutes(current_time, minutes_to_add)  # move clock up by the calculated minutes that passed
+    print(f"FIRST TIME: {current_time}")
     while truck:  # while the truck has not been emptied
         unload_for_delivery = []  # list to hold all packages in the same location
         for package_id in truck:  # iterate over IDs in truck
-            package = hashtable.search(package_id)  # pulls actual objects from the hashtable
+            package = hashtable.lookup(package_id)  # pulls actual objects from the hashtable
             if package.address == delivery_location:  # if the address on the package matches our delivery location...
                 unload_for_delivery.append(package)  # then we add them to the list of packages we unload for deliver
         for package in unload_for_delivery:  # iterate over packages to be delivered
             # print(f"state of truck{truck}, package to deliver: {package.id})
             # TO DO: ACTUALLY DELIVER THEM BY UPDATING HASHTABLE
+            hashtable.remove()
+            {f"package with ID {package.id} delivered at {current_time}."}
             truck.remove(package.id)  # check off the packages that were just delivered
         print(f"The truck just delivered to {delivery_location}, and has {len(truck)} packages: {truck})")
         if truck:  # if not empty, updates delivery and distance info for next run of iteration
             next_location_info = determine_shortest_address(delivery_location, truck)
             delivery_location = next_location_info[0]
-            total_miles_travelled += next_location_info[1]
+            miles_to_travel = next_location_info[1]
+            total_miles_travelled += miles_to_travel
+            minutes_to_add = minutes_passed(miles_to_travel)  # get the time it takes to go the next location
+            current_time = add_minutes(current_time, minutes_to_add)  # and add it to the current time
+            print(f"TIME AFTER GOING TO {delivery_location}: {current_time}")
             print(f"total miles so far {total_miles_travelled}")
-        else:  # if it is empty, sends the truck to the hub and updates the distance.
-            miles_to_hub = distance_to_next_address(delivery_location, 'HUB')
-            total_miles_travelled += miles_to_hub
+        else:  # if it is empty...
+            miles_to_hub = distance_to_next_address(delivery_location, 'HUB')  # gets the miles to the hub
+            total_miles_travelled += miles_to_hub  # adds the miles to the total
+            minutes_to_add = minutes_passed(miles_to_hub)  # get the time it takes to get back to the hub
+            current_time = add_minutes(current_time, minutes_to_add)  # and add it to the final time.
+            print(f"TIME AFTER RETURN TO HUB: {current_time}")
             print(f"Returned to hub from {delivery_location}, in {miles_to_hub} miles, total {total_miles_travelled}")
+    return current_time
 
 
-simple_truck_delivery(truck_3)
+# execute_truck_delivery(truck_2)
+
+hashtable.display()
+
+
+
+
 
 # TESTING DISTANCE_TO_NEXT_ADDRESS():
 # with_zip = distance_matrix[0][3]  # sample starting address. Has a zip attached
