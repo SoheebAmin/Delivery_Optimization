@@ -7,7 +7,8 @@ def get_data_from_csv(input_csv):
     """
     :param input_csv: the location of a CSV file to be read
     :return: a 2D matrix that represents the rows and columns of the CSV
-    Complexity: O(n)
+    Time Complexity: O(n)
+    Space Complexity:
 
     This function goes through the given CSV files and puts each row into a single list, creating a 2D array
     """
@@ -23,7 +24,8 @@ def remove_zip(address):
     """
     :param address: an address that has as zip code at the end
     :return: The same address without the zip code at the end.
-    Complexity: O(n)
+    Time Complexity: O(n)
+    Space Complexity:
 
     Takes as input an address with with a zip code at the end, returns the address without the zip code.
     """

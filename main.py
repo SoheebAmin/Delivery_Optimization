@@ -62,7 +62,7 @@ def create_and_hash_package_objects(matrix):
 
     for inner_list in matrix:
         package = Package.Package(
-            int(inner_list[0]),  # ID, converted to Int
+            int(inner_list[0]),  # ID, converted to Int from CSV's string.
             inner_list[1],  # Address
             inner_list[2],  # City
             inner_list[3],  # State
@@ -70,7 +70,7 @@ def create_and_hash_package_objects(matrix):
             inner_list[5],  # Deadline
             inner_list[6],  # Mass
             inner_list[7],  # Note
-            None)  # time delivered
+            None)  # time delivered. None until modified, post delivery
         hashtable.insert(package)
 
 
@@ -85,7 +85,6 @@ def distance_to_next_address(current_package_location, destination):
     Time Complexity: O(n) - since we are only searching top row for address, it is N + N, not N * N
     Space Complexity:
     """
-    # print(f"starting at {current_package_location}, ending at {destination}")  # shows starting and ending address
     current_address_row = []  # initialize variable for row check
     for row in distance_matrix:  # iterate over rows in distance table
         start = CSV_Import.remove_zip(row[0])  # gets first index which is address, strip the zip code.
@@ -93,8 +92,8 @@ def distance_to_next_address(current_package_location, destination):
             current_address_row = row  # sets this row as the one to check and breaks
             break
     if not current_address_row:  # a check ensure an address match was found.
-        print("no row matched!")
-        return -1
+        print("no row matched! There is a mismatch in the data")
+        sys.exit(1)  # if so, exit the program after an error message
     destination_address_row = distance_matrix[0]  # the matching destination is found in the matrix's first index
     index = 0  # variable to count which index we need to get the distances in the current address row
     for address in destination_address_row:  # iterate over the destination row
@@ -103,9 +102,9 @@ def distance_to_next_address(current_package_location, destination):
             break
         else:  # if not, then update to next index, which will be checked next iteration
             index += 1
-    distance = current_address_row[index]
-    distance_as_float = float(distance)
-    return distance_as_float
+    distance = current_address_row[index]  # get the distance for the correct row/column from the matrix
+    distance_as_float = float(distance)  # convert it from string to float for type compatibility
+    return distance_as_float  # return the distance in miles between the two given addresses
 
 
 def determine_shortest_address(current_address, truck):
@@ -141,7 +140,7 @@ def execute_truck_delivery(truck_with_number, departing_time, status_statements)
     :param status_statements: a boolean which either turns the status statements on or off.
     :param departing_time: The time the truck will leave to start deliveries
     :return: The time after the deliveries have completed.
-    Time Complexity: TODO!!!!!!!!!
+    Time Complexity:
     Space Complexity:
 
     This function...
@@ -198,7 +197,7 @@ def execute_truck_delivery(truck_with_number, departing_time, status_statements)
 
 def verify_delivery_on_time():
     """
-    :return:
+    :return: Boolean of true if all deliveries on time, otherwise false
     Comlexity: O(n^2)
 
     This function will iterate over the hash table after deliveries, and check delivery time objects against the
@@ -269,38 +268,7 @@ print(f"The total miles travelled by all three trucks: {combine_miles}\n")
 
 verify_delivery_on_time()
 
-#
-# #     if bucket:
-#         for kv_pair in bucket:
-#             id = kv_pair[1].id
-#             time_delivered = kv_pair[1].delivery_time
-#             print(f"package with id {id} was delivered at {time_delivered}")
 
 
-# TESTING DISTANCE_TO_NEXT_ADDRESS():
-# with_zip = distance_matrix[0][3]  # sample starting address. Has a zip attached
-# a = CSV_Import.remove_zip(with_zip)  # I have to remove zip to make comparison
-# package = hashtable.search(3)  # sample random package
-# b = package.address  # sample destination from said package
-# distance_to_next_address(a, b)
 
 
-# for row in distance_matrix:
-#     print(row)
-#
-#
-# def confirm_address_in_hashtable():
-#     for i in range(1, 41):
-#         package = hashtable.search(i)
-#         address_to_check = package.address
-#         found = False
-#         for item in distance_matrix[0]:
-#             item = CSV_Import.remove_zip(item)
-#             if address_to_check == item:
-#                 print(f"For id {i}, address {item} is confirmed!")
-#                 found = True
-#         if not found:
-#             print(f"{i} not found for address {address_to_check}")
-#
-#
-# confirm_address_in_hashtable()
