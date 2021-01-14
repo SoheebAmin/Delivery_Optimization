@@ -1,9 +1,10 @@
-# Soheeb Amin's Delivery Optimization project. Student ID 001452292.
+# Soheeb Amin's Delivery Optimization project. Student ID 001452292. Chosen Algorithm: Nearest Neighbor
 
 import datetime
 import CSV_Import
 import Hashtable
 import Package
+import sys
 
 # call the function to read the rows of the packages csv into a 2D array
 packages_matrix = CSV_Import.get_data_from_csv("Packages.csv")
@@ -22,7 +23,7 @@ def minutes_passed(miles_to_travel):
     """
     :param miles_to_travel
     :return: The minutes it will take to travel given miles
-    Complexity: O(1)
+    Time Complexity: O(1)
 
     This function takes in the miles a truck needs to travel to its next destination, and returns the number of minutes
     the travel will take.
@@ -37,7 +38,7 @@ def add_minutes(current_time_object, minutes_to_add):
     :param current_time_object: the global time object holding the current time
     :param minutes_to_add: the minutes we have already determined should be added to the time.
     :return: current_time_object with minutes updated by minutes_to_add
-    Complexity: O(1)
+    Space Complexity: O(1)
 
     Time objects does not have an add time method, so this function was modified from question 59465525 on
     Stackoverflow to take a time object and add a set amount of minutes to it.
@@ -53,7 +54,8 @@ def create_and_hash_package_objects(matrix):
     """
     :param matrix: The packages matrix pulled from the CSV
     :return: None. The already initialized hashtable will be filled.
-    Complexity: O(n)
+    Time Complexity: O(n)
+    Space Complexity:
 
     This function places each row of the provided matrix into a package object, which is then hashed into the hash table
     """
@@ -77,7 +79,11 @@ create_and_hash_package_objects(packages_matrix)
 
 def distance_to_next_address(current_package_location, destination):
     """
-    :return: the distance in miles to the next address
+    :param current_package_location: where the truck (and therefore package) currently is
+    :param destination: where we want the package to go.
+    :return: the distance in miles to the next address according to the distance table
+    Time Complexity: O(n) - since we are only searching top row for address, it is N + N, not N * N
+    Space Complexity:
     """
     # print(f"starting at {current_package_location}, ending at {destination}")  # shows starting and ending address
     current_address_row = []  # initialize variable for row check
@@ -107,7 +113,7 @@ def determine_shortest_address(current_address, truck):
     :param current_address: The address that the truck is currently at.
     :param truck: the list which abstracts the truck and the current packages it holds.
     :return: the best address to go to for delivery
-    Complexity: TODO!!!!!!!!!
+    Complexity: 0(n^2)
 
     This function takes the current address of the truck, examines its current contents, and determines the next best
     location to travel to based on the nearest neighbor algorithm.
@@ -124,27 +130,25 @@ def determine_shortest_address(current_address, truck):
     return [next_address, shortest_distance]  # return the address to go to next, and the distance that it would take.
 
 
-truck_1 = [1, [1, 13, 14, 15, 19, 16, 20, 29, 31, 34, 37, 40]] # Early deadline packages and go-together packages.
-truck_2 = [2, [3, 6, 18, 25, 26, 27, 28, 32, 36, 38, 30, 33, 35, 39]]  # delayed till 9:05, wrong address, only truck 2
-truck_3 = [3, [2, 4, 5, 7, 8, 9, 10, 11, 12, 17, 21, 22, 23, 24]]  # the rest, but last 6 added to truck 2.
-
-def update_address(address_to_update, package):
-    package
+truck_1 = [1, [1, 13, 14, 15, 19, 16, 20, 29, 31, 34, 37, 40, 33, 35, 39]]  # Early deadline packages, together packages
+truck_2 = [2, [3, 6, 18, 25, 26, 27, 28, 32, 36, 38, 30]]  # delayed till 9:05, wrong address, only truck 2
+truck_3 = [3, [2, 4, 5, 7, 8, 9, 10, 11, 12, 17, 21, 22, 23, 24]]  # most of the no special conditions one
 
 
 def execute_truck_delivery(truck_with_number, departing_time, status_statements):
     """
+    :param truck_with_number: The truck which needs to run deliveries
     :param status_statements: a boolean which either turns the status statements on or off.
     :param departing_time: The time the truck will leave to start deliveries
-    :param truck: The truck which needs to run deliveries
     :return: The time after the deliveries have completed.
-    Complexity: TODO!!!!!!!!!
+    Time Complexity: TODO!!!!!!!!!
+    Space Complexity:
 
     This function...
     """
     truck = truck_with_number[1]
+    truck_number = truck_with_number[0]
     if status_statements:
-        truck_number = truck[0]
         print(f"\nSTARTING DELIVERY FOR TRUCK {truck_number}: {len(truck)} packages\n")
     current_time = departing_time  # marks the starting time as the time the truck is set to depart
     next_location_info = determine_shortest_address('HUB', truck)  # call func to get nearest address + dist from hub
@@ -186,7 +190,8 @@ def execute_truck_delivery(truck_with_number, departing_time, status_statements)
             minutes_to_add = minutes_passed(miles_to_hub)  # get the time it takes to get back to the hub
             current_time = add_minutes(current_time, minutes_to_add)  # and add it to the final time.
             if status_statements:
-                print(f"Returned to hub from {delivery_location}, in {miles_to_hub} miles, total {total_miles_travelled}")
+                print(
+                    f"Returned to hub from {delivery_location}, in {miles_to_hub} miles, total {total_miles_travelled}")
                 print(f"Arrival Time: {current_time}\n")
     return [current_time, total_miles_travelled]
 
@@ -206,7 +211,7 @@ def verify_delivery_on_time():
         if bucket:  # ignore empty buckets
             for kv_pair in bucket:  # for each key/value pair in the bucket...
                 package = kv_pair[1]  # grab the package object
-                p_id = package.id   # note the ID
+                p_id = package.id  # note the ID
                 time_delivered = package.delivery_time  # store the recoded time of delivery
                 if time_delivered:  # if the package was delivered (which all should be)
                     delivery_count += 1  # add the counter (which should total 40 by the end)
@@ -221,20 +226,31 @@ def verify_delivery_on_time():
                         delivery_success = False  # set success to false
     if delivery_success:  # if success still remains true after that loop...
         print(f"{delivery_count} packages were delivered, and all met their deadlines.")
-    else: # if not, print failures and return false.
+    else:  # if not, print failures and return false.
         print(f"{len(failure_list)} packages failed to be on time: {failure_list}")
+        sys.exit(1)  # quit the program after a failure message
     return delivery_success
 
 
 # Set the departure time for the first two trucks
-depart_time_for_truck_1 = datetime.time(8, 00, 00)
-depart_time_for_truck_2 = datetime.time(9, 0o5, 00)
+depart_time_for_truck_1 = datetime.time(8, 00, 00)  # truck 1 leaves at the start of the day.
+depart_time_for_truck_2 = datetime.time(9, 0o5, 00)  # truck 2 will stay back for all packages to come late to hub.
 
 # Execute deliveries for truck 1, and saves the the time after deliveries, and the total miles travelled.
 time_and_distance_after_truck_1 = execute_truck_delivery(truck_1, depart_time_for_truck_1, show_status)
 
-# Sets truck 3's departure time based on truck 1's arrival time (driver of truck 1 takes over truck 3)
+# Sets truck 3's departure time based on truck 1's arrival time (driver of truck 1 takes truck 3) + delay for package 9
 depart_time_for_truck_3 = add_minutes(time_and_distance_after_truck_1[0], 60)
+
+# check if address can be updated for package 9, if so, update it.
+package_update_time = datetime.time(10, 20, 00)
+if depart_time_for_truck_3 < package_update_time:  # if the departing time is earlier than the update time...
+    print("Truck 3 left before package 9's address could be updated. Delivery failure")
+    sys.exit(1)  # quit the program after a failure message
+else:
+    package_9 = hashtable.lookup(9)  # gets package 9 from the hash table
+    package_9.address = "410 S State St" # sets it with the address provided in assessment directions.
+
 
 # Execute deliveries for truck 2, and saves the information about its time and distance:
 time_and_distance_after_truck_2 = execute_truck_delivery(truck_2, depart_time_for_truck_1, show_status)
@@ -249,12 +265,12 @@ truck_3_miles = time_and_distance_after_truck_3[1]
 
 # Total miles by the end of deliveries, as optimized by the nearest neighbor algorithm
 combine_miles = truck_1_miles + truck_2_miles + truck_3_miles
-print(f"\nThe total miles travelled by all three trucks: {combine_miles}")
-
+print(f"The total miles travelled by all three trucks: {combine_miles}\n")
 
 verify_delivery_on_time()
 
-#     if bucket:
+#
+# #     if bucket:
 #         for kv_pair in bucket:
 #             id = kv_pair[1].id
 #             time_delivered = kv_pair[1].delivery_time
