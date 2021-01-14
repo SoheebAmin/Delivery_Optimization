@@ -231,44 +231,57 @@ def verify_delivery_on_time():
     return delivery_success
 
 
-# Set the departure time for the first two trucks
-depart_time_for_truck_1 = datetime.time(8, 00, 00)  # truck 1 leaves at the start of the day.
-depart_time_for_truck_2 = datetime.time(9, 0o5, 00)  # truck 2 will stay back for all packages to come late to hub.
+def cli_for_project():
+    print("""
+    This is the command-line interface to run and view the outcome of the delivery program.
+    
+    Choose what you'd like to do:
+    
+    1. Execute the delivery program with status statements.
+    2. Execute the delivery program without status statements.
+    3. View the delivery of the packages at a specific time.
+    
+    """)
 
-# Execute deliveries for truck 1, and saves the the time after deliveries, and the total miles travelled.
-time_and_distance_after_truck_1 = execute_truck_delivery(truck_1, depart_time_for_truck_1, show_status)
-
-# Sets truck 3's departure time based on truck 1's arrival time (driver of truck 1 takes truck 3) + delay for package 9
-depart_time_for_truck_3 = add_minutes(time_and_distance_after_truck_1[0], 60)
-
-# check if address can be updated for package 9, if so, update it.
-package_update_time = datetime.time(10, 20, 00)
-if depart_time_for_truck_3 < package_update_time:  # if the departing time is earlier than the update time...
-    print("Truck 3 left before package 9's address could be updated. Delivery failure")
-    sys.exit(1)  # quit the program after a failure message
-else:
-    package_9 = hashtable.lookup(9)  # gets package 9 from the hash table
-    package_9.address = "410 S State St" # sets it with the address provided in assessment directions.
-
-
-# Execute deliveries for truck 2, and saves the information about its time and distance:
-time_and_distance_after_truck_2 = execute_truck_delivery(truck_2, depart_time_for_truck_1, show_status)
-
-# Execute deliveries for truck 3, starting at the time truck 1 arrives + 1 hour to allow for package time correction
-time_and_distance_after_truck_3 = execute_truck_delivery(truck_3, depart_time_for_truck_3, show_status)
-
-# The total miles for each truck as found in the second item in the returned list after delivery.
-truck_1_miles = time_and_distance_after_truck_1[1]
-truck_2_miles = time_and_distance_after_truck_2[1]
-truck_3_miles = time_and_distance_after_truck_3[1]
-
-# Total miles by the end of deliveries, as optimized by the nearest neighbor algorithm
-combine_miles = truck_1_miles + truck_2_miles + truck_3_miles
-print(f"The total miles travelled by all three trucks: {combine_miles}\n")
-
-verify_delivery_on_time()
-
-
-
+#
+# # Set the departure time for the first two trucks
+# depart_time_for_truck_1 = datetime.time(8, 00, 00)  # truck 1 leaves at the start of the day.
+# depart_time_for_truck_2 = datetime.time(9, 0o5, 00)  # truck 2 will stay back for all packages to come late to hub.
+#
+# # Execute deliveries for truck 1, and saves the the time after deliveries, and the total miles travelled.
+# time_and_distance_after_truck_1 = execute_truck_delivery(truck_1, depart_time_for_truck_1, show_status)
+#
+# # Sets truck 3's departure time based on truck 1's arrival time (driver of truck 1 takes truck 3) + delay for package 9
+# depart_time_for_truck_3 = add_minutes(time_and_distance_after_truck_1[0], 60)
+#
+# # check if address can be updated for package 9, if so, update it.
+# package_update_time = datetime.time(10, 20, 00)
+# if depart_time_for_truck_3 < package_update_time:  # if the departing time is earlier than the update time...
+#     print("Truck 3 left before package 9's address could be updated. Delivery failure")
+#     sys.exit(1)  # quit the program after a failure message
+# else:
+#     package_9 = hashtable.lookup(9)  # gets package 9 from the hash table
+#     package_9.address = "410 S State St" # sets it with the address provided in assessment directions.
+#
+#
+# # Execute deliveries for truck 2, and saves the information about its time and distance:
+# time_and_distance_after_truck_2 = execute_truck_delivery(truck_2, depart_time_for_truck_1, show_status)
+#
+# # Execute deliveries for truck 3, starting at the time truck 1 arrives + 1 hour to allow for package time correction
+# time_and_distance_after_truck_3 = execute_truck_delivery(truck_3, depart_time_for_truck_3, show_status)
+#
+# # The total miles for each truck as found in the second item in the returned list after delivery.
+# truck_1_miles = time_and_distance_after_truck_1[1]
+# truck_2_miles = time_and_distance_after_truck_2[1]
+# truck_3_miles = time_and_distance_after_truck_3[1]
+#
+# # Total miles by the end of deliveries, as optimized by the nearest neighbor algorithm
+# combine_miles = truck_1_miles + truck_2_miles + truck_3_miles
+# print(f"The total miles travelled by all three trucks: {combine_miles}\n")
+#
+# verify_delivery_on_time()
+#
+#
+#
 
 
