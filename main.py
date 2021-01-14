@@ -328,6 +328,7 @@ def cli_for_project():
             else:
                 if choice == "1":
                     verify_delivery_on_time()
+                    sys.exit(0)
                 if choice == "2":
                     while True:
                         print("Provide a time in the format 0:00. (ex: 8:30, 16:02)")
@@ -337,7 +338,7 @@ def cli_for_project():
                         except ValueError:
                             continue
                         status_update(status_time)
-                        break
+                        sys.exit(0)
 
 
 # run the command line interface when main.py is run.
