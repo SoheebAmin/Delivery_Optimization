@@ -15,9 +15,6 @@ distance_matrix = CSV_Import.get_data_from_csv("Distance.csv")
 # initialize the hashtable
 hashtable = Hashtable.HashTable(100)
 
-# A variable to be set by the user for if step-by-step print statements should be visible.
-show_status = True
-
 
 def minutes_passed(miles_to_travel):
     """
@@ -143,7 +140,8 @@ def execute_truck_delivery(truck_with_number, departing_time, status_statements)
     Time Complexity:
     Space Complexity:
 
-    This function...
+    This function delivers all the packages of a given truck and returns it to the hub. It always calls the nearest
+    neighbor function from its location to determine the closest next location to make deliveries to.
     """
     truck = truck_with_number[1]
     truck_number = truck_with_number[0]
@@ -223,6 +221,9 @@ def verify_delivery_on_time():
                         print(f"package with id {p_id} delivered at {time_delivered}, but deadline was {required_time}")
                         failure_list.append(package.id)  # add it to the failure list.
                         delivery_success = False  # set success to false
+                    else:
+                        print(f"package with ID {p_id} successfully was delivered before {required_time}. The "
+                              f"delivery time was: {time_delivered}")
     if delivery_success:  # if success still remains true after that loop...
         print(f"{delivery_count} packages were delivered, and all met their deadlines.")
     else:  # if not, print failures and return false.
@@ -231,57 +232,113 @@ def verify_delivery_on_time():
     return delivery_success
 
 
+def status_update(status_time):
+    """
+    :param status_time: A time object to be checked against.
+    :return:None.
+    Time Complexity: O(n)
+    Space Complexity:
+
+    This function prints out the status of all deliveries at a given time.
+    """
+    for p_id in range(1, 41):
+        package = hashtable.lookup(p_id)
+        time_delivered = package.delivery_time
+        if status_time >= time_delivered:  # if the status is past the actual delivery time:
+            print(f"Package {p_id} status: Delivered at {time_delivered}")
+        else:
+            print(f"Package {p_id} status: Not yet delivered")
+
+
+
+
+def execute_program(show_status):
+    """
+    :param show_status: Boolean for if status statements to be shown
+    :return: None.
+    Time Complexity:
+    Space Complexity:
+
+    A function that executes the deliveries for all three trucks.
+    """
+    # Set the departure time for the first two trucks
+    depart_time_for_truck_1 = datetime.time(8, 00, 00)  # truck 1 leaves at the start of the day.
+    depart_time_for_truck_2 = datetime.time(9, 0o5, 00)  # truck 2 will stay back for all packages to come late to hub.
+
+    # Execute deliveries for truck 1, and saves the the time after deliveries, and the total miles travelled.
+    time_and_distance_after_truck_1 = execute_truck_delivery(truck_1, depart_time_for_truck_1, show_status)
+
+    # Sets truck 3's departure time based on truck 1's arrival time (driver of truck 1 takes truck 3) + delay for
+    # package 9
+    depart_time_for_truck_3 = add_minutes(time_and_distance_after_truck_1[0], 60)
+
+    # check if address can be updated for package 9, if so, update it.
+    package_update_time = datetime.time(10, 20, 00)
+    if depart_time_for_truck_3 < package_update_time:  # if the departing time is earlier than the update time...
+        print("Truck 3 left before package 9's address could be updated. Delivery failure")
+        sys.exit(1)  # quit the program after a failure message
+    else:
+        package_9 = hashtable.lookup(9)  # gets package 9 from the hash table
+        package_9.address = "410 S State St"  # sets it with the address provided in assessment directions.
+
+    # Execute deliveries for truck 2, and saves the information about its time and distance:
+    time_and_distance_after_truck_2 = execute_truck_delivery(truck_2, depart_time_for_truck_1, show_status)
+
+    # Execute deliveries for truck 3, starting at the time truck 1 arrives + 1 hour to allow for package time correction
+    time_and_distance_after_truck_3 = execute_truck_delivery(truck_3, depart_time_for_truck_3, show_status)
+
+    # The total miles for each truck as found in the second item in the returned list after delivery.
+    truck_1_miles = time_and_distance_after_truck_1[1]
+    truck_2_miles = time_and_distance_after_truck_2[1]
+    truck_3_miles = time_and_distance_after_truck_3[1]
+
+    # Total miles by the end of deliveries, as optimized by the nearest neighbor algorithm
+    combine_miles = truck_1_miles + truck_2_miles + truck_3_miles
+    print(f"The total miles travelled by all three trucks: {combine_miles}\n")
+
+
+# The command line interface by which all the project's functions are run.
 def cli_for_project():
-    print("""
-    This is the command-line interface to run and view the outcome of the delivery program.
-    
-    Choose what you'd like to do:
-    
-    1. Execute the delivery program with status statements.
-    2. Execute the delivery program without status statements.
-    3. View the delivery of the packages at a specific time.
-    
-    """)
+    print(
+        "\nThis is the command-line interface to run and view the outcome of the delivery program. The delivery "
+        "algorithm will now run.\n"
+        "View status statements, or just the total miles at the end?\n"
+        "1. All statements\n"
+        "2. Just the total miles")
+    while True:
+        acceptable_choices = ["1", "2"]
+        choice = input()
+        if choice not in acceptable_choices:
+            print(f"{choice} is not a valid entry. Please select from the options")
+            continue
+        else:
+            if choice == "1":
+                execute_program(True)
+            if choice == "2":
+                execute_program(False)
 
-#
-# # Set the departure time for the first two trucks
-# depart_time_for_truck_1 = datetime.time(8, 00, 00)  # truck 1 leaves at the start of the day.
-# depart_time_for_truck_2 = datetime.time(9, 0o5, 00)  # truck 2 will stay back for all packages to come late to hub.
-#
-# # Execute deliveries for truck 1, and saves the the time after deliveries, and the total miles travelled.
-# time_and_distance_after_truck_1 = execute_truck_delivery(truck_1, depart_time_for_truck_1, show_status)
-#
-# # Sets truck 3's departure time based on truck 1's arrival time (driver of truck 1 takes truck 3) + delay for package 9
-# depart_time_for_truck_3 = add_minutes(time_and_distance_after_truck_1[0], 60)
-#
-# # check if address can be updated for package 9, if so, update it.
-# package_update_time = datetime.time(10, 20, 00)
-# if depart_time_for_truck_3 < package_update_time:  # if the departing time is earlier than the update time...
-#     print("Truck 3 left before package 9's address could be updated. Delivery failure")
-#     sys.exit(1)  # quit the program after a failure message
-# else:
-#     package_9 = hashtable.lookup(9)  # gets package 9 from the hash table
-#     package_9.address = "410 S State St" # sets it with the address provided in assessment directions.
-#
-#
-# # Execute deliveries for truck 2, and saves the information about its time and distance:
-# time_and_distance_after_truck_2 = execute_truck_delivery(truck_2, depart_time_for_truck_1, show_status)
-#
-# # Execute deliveries for truck 3, starting at the time truck 1 arrives + 1 hour to allow for package time correction
-# time_and_distance_after_truck_3 = execute_truck_delivery(truck_3, depart_time_for_truck_3, show_status)
-#
-# # The total miles for each truck as found in the second item in the returned list after delivery.
-# truck_1_miles = time_and_distance_after_truck_1[1]
-# truck_2_miles = time_and_distance_after_truck_2[1]
-# truck_3_miles = time_and_distance_after_truck_3[1]
-#
-# # Total miles by the end of deliveries, as optimized by the nearest neighbor algorithm
-# combine_miles = truck_1_miles + truck_2_miles + truck_3_miles
-# print(f"The total miles travelled by all three trucks: {combine_miles}\n")
-#
-# verify_delivery_on_time()
-#
-#
-#
+        print("What would you like to do next?: \n"
+              "1. Verify that all packages with deadlines were on time.\n"
+              "2. Check the delivery status of all packages at a specific time.")
+        while True:
+            choice = input()
+            if choice not in acceptable_choices:
+                print(f"{choice} is not a valid entry. Please select from the options")
+                continue
+            else:
+                if choice == "1":
+                    verify_delivery_on_time()
+                if choice == "2":
+                    while True:
+                        print("Provide a time in the format 0:00. (ex: 8:30, 16:02)")
+                        given_time = input()
+                        try:
+                            status_time = datetime.datetime.strptime(given_time, '%H:%M').time()  # convert to time obj
+                        except ValueError:
+                            continue
+                        status_update(status_time)
+                        break
 
 
+# run the command line interface when main.py is run.
+cli_for_project()
