@@ -2,10 +2,10 @@
 # Chosen Algorithm: Nearest Neighbor
 # Environment: PyCharm 2020.3.1, Python 3.8, Microsoft Windows 10 Home.
 
-import datetime
-import CSV_Import
 import Hashtable
 import Package
+import datetime
+import CSV_Import
 import sys
 
 # call the function to read the rows of the packages csv into a 2D array
