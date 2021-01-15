@@ -103,6 +103,8 @@ def distance_to_next_address(current_package_location, destination):
         else:  # if not, then update to next index, which will be checked next iteration
             index += 1
     distance = current_address_row[index]  # get the distance for the correct row/column from the matrix
+    if distance == '':  # if the cell is empty due to being on the wrong side of the bi-directional table...
+        return distance_to_next_address(destination, current_package_location)  # ... run the function again, switched
     distance_as_float = float(distance)  # convert it from string to float for type compatibility
     return distance_as_float  # return the distance in miles between the two given addresses
 
