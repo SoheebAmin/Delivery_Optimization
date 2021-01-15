@@ -2,7 +2,7 @@
 
 
 class Package:
-    def __init__(self, id, address, city, state, zip, deadline, mass, note, delivery_time):
+    def __init__(self, id, address, city, state, zip, deadline, mass, note, delivery_time, delivered_by):
         self.id = id
         self.address = address
         self.city = city
@@ -12,3 +12,4 @@ class Package:
         self.mass = mass
         self.note = note
         self.delivery_time = None  # delivery times remains None until actually delivered, then it is updated.
+        self.delivered_by = None  # Number of truck to append once delivered

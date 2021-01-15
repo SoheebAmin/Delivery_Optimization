@@ -1,4 +1,6 @@
-# Soheeb Amin's Delivery Optimization project. Student ID 001452292. Chosen Algorithm: Nearest Neighbor
+# Soheeb Amin's Delivery Optimization project. Student ID 001452292.
+# Chosen Algorithm: Nearest Neighbor
+# Environment: PyCharm 2020.3.1, Python 3.8, Microsoft Windows 10 Home.
 
 import datetime
 import CSV_Import
@@ -67,7 +69,8 @@ def create_and_hash_package_objects(matrix):
             inner_list[5],  # Deadline
             inner_list[6],  # Mass
             inner_list[7],  # Note
-            None)  # time delivered. None until modified, post delivery
+            None,  # time delivered. None until modified, post delivery
+            None)  # which truck delivered. None until modified, post delivery
         hashtable.insert(package)
 
 
@@ -153,7 +156,8 @@ def execute_truck_delivery(truck_with_number, departing_time, status_statements)
     total_miles_travelled = next_location_info[1]  # add distance to our distance counter
     minutes_to_add = minutes_passed(total_miles_travelled)  # using the distance travelled, get how many minutes passed
     if status_statements:
-        print(f"Departing from Hub. Nearest neighbour: {delivery_location}, which is {total_miles_travelled} away")
+        print(f"Departing at {current_time} from Hub with packages {truck}\n"
+              f"First nearest neighbour: {delivery_location}, which is {total_miles_travelled} away")
     current_time = add_minutes(current_time, minutes_to_add)  # move clock up by the calculated minutes that passed
     while truck:  # while the truck has not been emptied
         unload_for_delivery = []  # list to hold all packages in the same location
@@ -162,10 +166,9 @@ def execute_truck_delivery(truck_with_number, departing_time, status_statements)
             if package.address == delivery_location:  # if the address on the package matches our delivery location...
                 unload_for_delivery.append(package)  # then we add them to the list of packages we unload for deliver
         for package in unload_for_delivery:  # iterate over packages to be delivered
-            # if status_statements:
-            # print(f"state of truck{truck}, package to deliver: {package.id}")
             hashtable.remove(package.id)  # remove the old version of the package from the hashtable
             package.delivery_time = current_time  # add the delivery time to the package
+            package.delivered_by = truck_number
             hashtable.insert(package)  # insert the delivered package back into the hash table
             if status_statements:
                 print(f"package with ID {package.id} delivered at {current_time}.")
@@ -196,7 +199,8 @@ def execute_truck_delivery(truck_with_number, departing_time, status_statements)
 def verify_delivery_on_time():
     """
     :return: Boolean of true if all deliveries on time, otherwise false
-    Comlexity: O(n^2)
+    Time Complexity: O(n^2)
+    Space Complexity: O(n^2)
 
     This function will iterate over the hash table after deliveries, and check delivery time objects against the
     required times of delivery (which are converted from strings to time objects) to ensure all deliveries are on time.
@@ -210,6 +214,7 @@ def verify_delivery_on_time():
                 package = kv_pair[1]  # grab the package object
                 p_id = package.id  # note the ID
                 time_delivered = package.delivery_time  # store the recoded time of delivery
+                truck_number = package.delivered_by  # which truck number
                 if time_delivered:  # if the package was delivered (which all should be)
                     delivery_count += 1  # add the counter (which should total 40 by the end)
                 required_time_raw = package.deadline  # grab the string which contains the deadline from the package.
@@ -222,8 +227,8 @@ def verify_delivery_on_time():
                         failure_list.append(package.id)  # add it to the failure list.
                         delivery_success = False  # set success to false
                     else:
-                        print(f"package with ID {p_id} successfully was delivered before {required_time}. The "
-                              f"delivery time was: {time_delivered}")
+                        print(f"package with ID {p_id} successfully was delivered before {required_time}"
+                              f" by truck {truck_number}. The delivery time was: {time_delivered}")
     if delivery_success:  # if success still remains true after that loop...
         print(f"{delivery_count} packages were delivered, and all met their deadlines.")
     else:  # if not, print failures and return false.
@@ -237,19 +242,18 @@ def status_update(status_time):
     :param status_time: A time object to be checked against.
     :return:None.
     Time Complexity: O(n)
-    Space Complexity:
+    Space Complexity: O(n)
 
     This function prints out the status of all deliveries at a given time.
     """
     for p_id in range(1, 41):
         package = hashtable.lookup(p_id)
         time_delivered = package.delivery_time
+        truck_delivered = package.delivered_by
         if status_time >= time_delivered:  # if the status is past the actual delivery time:
-            print(f"Package {p_id} status: Delivered at {time_delivered}")
+            print(f"Package {p_id} status: Delivered at {time_delivered} by truck {truck_delivered}")
         else:
-            print(f"Package {p_id} status: Not yet delivered")
-
-
+            print(f"Package {p_id} status: Not yet delivered.")
 
 
 def execute_program(show_status):
@@ -282,7 +286,7 @@ def execute_program(show_status):
         package_9.address = "410 S State St"  # sets it with the address provided in assessment directions.
 
     # Execute deliveries for truck 2, and saves the information about its time and distance:
-    time_and_distance_after_truck_2 = execute_truck_delivery(truck_2, depart_time_for_truck_1, show_status)
+    time_and_distance_after_truck_2 = execute_truck_delivery(truck_2, depart_time_for_truck_2, show_status)
 
     # Execute deliveries for truck 3, starting at the time truck 1 arrives + 1 hour to allow for package time correction
     time_and_distance_after_truck_3 = execute_truck_delivery(truck_3, depart_time_for_truck_3, show_status)
