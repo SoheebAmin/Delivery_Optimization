@@ -8,7 +8,12 @@ class HashTable:
     being the value associated with the key. If there is a collision, the lists are chained together, making this a
     chaining hash table.
     """
-    def __init__(self, buckets):  # provide number of buckets
+    def __init__(self, buckets):
+        """
+        :param buckets: The number of buckets to initiate the hash table with.
+        Time Complexity: O(n)
+        Space Complexity: O(n)
+        """
         self.table = []  # empty table
         for i in range(buckets):  # create empty buckets with provided size
             self.table.append([])  # add the buckets to the table
@@ -23,12 +28,10 @@ class HashTable:
         This methods gets the bucket list where this item will go, using its ID as a key. The hash function uses the
         ID and a large prime number, modulo the length of the table, to choose a bucket for it.
         """
-        bucket = (package.id ** 2 * 50331653) % len(self.table)  # hash function: square and multiply by a large prime.
-        bucket_list = self.table[bucket]
-
-        # insert the item to the end of the bucket list.
-        key_value_pair = [package.id, package]
-        bucket_list.append(key_value_pair)
+        bucket = (package.id ** 2 * 50331653) % len(self.table)  # hash function: square and multiply by a large prime
+        bucket_list = self.table[bucket]  # the number given is the bucket to insert to
+        key_value_pair = [package.id, package]  # set the key/value pair as the package ID and the package itself
+        bucket_list.append(key_value_pair)  # insert it into the bucket number given by the hash function
 
     def lookup(self, key):
         """
@@ -39,43 +42,27 @@ class HashTable:
 
         This method searches the first index of every item in the hashtable to see if it is the key of the hashed item.
         """
-        # get the bucket list where this key would be.
-        bucket = (key ** 2 * 50331653) % len(self.table)
-        bucket_list = self.table[bucket]
-
-        # search for the key in the bucket list by iterating over every key-value pair and checking the keys.
-        if bucket_list:
-            for hashed_item in bucket_list:
-                if hashed_item[0] == key:
-                    return hashed_item[1]
+        bucket = (key ** 2 * 50331653) % len(self.table)  # get the bucket by using hash function
+        bucket_list = self.table[bucket]  # grab the list where the value for that key would be
+        if bucket_list:  # only iterate if the bucket list isn't empty
+            for hashed_item in bucket_list:  # look through the bucket
+                if hashed_item[0] == key:  # if the first item is the key
+                    return hashed_item[1]  # return the second item, which will be the value
         else:
-            # the key is not found.
-            return None
+            return None # the key is not found.
 
     def remove(self, key):
         """
         :param key: The key for the value to remove from the hash table
-        :return:
-        Time Complexity:
-        Space Complexity:
+        :return: None.
+        Time Complexity: O(1)
+        Space Complexity: O(1)
 
         This method removes an item with matching key from the hash table.
         """
-        # get the bucket list where this item will be removed from.
-        bucket = (key ** 2 * 50331653) % len(self.table)
-        bucket_list = self.table[bucket]
+        bucket = (key ** 2 * 50331653) % len(self.table)  # get the bucket by using hash function
+        bucket_list = self.table[bucket]  # grab the list where the value for that key would be
+        for hashed_item in bucket_list:  # for the items in that list...
+            if hashed_item[0] == key:  # if that item is the key...
+                bucket_list.remove(hashed_item)  # then remove that item
 
-        # search for the key in the bucket list by iterating over every key-value pair and checking the keys.
-        if bucket_list:
-            for hashed_item in bucket_list:
-                if hashed_item[0] == key:
-                    bucket_list.remove(hashed_item)
-
-    def display(self):
-        """
-        Time Complexity:
-        Space Complexity:
-        :return:
-        """
-        for item in self.table:
-            print(item)

@@ -23,12 +23,13 @@ def minutes_passed(miles_to_travel):
     :param miles_to_travel
     :return: The minutes it will take to travel given miles
     Time Complexity: O(1)
+    Space Complexity: O(1)
 
     This function takes in the miles a truck needs to travel to its next destination, and returns the number of minutes
     the travel will take.
     """
     truck_speed = 18  # the given MPH of the truck.
-    minutes = (miles_to_travel / truck_speed) * 60
+    minutes = (miles_to_travel / truck_speed) * 60  # formula for calculating how many minutes pass, given 18 mph
     return minutes
 
 
@@ -37,11 +38,11 @@ def add_minutes(current_time_object, minutes_to_add):
     :param current_time_object: the global time object holding the current time
     :param minutes_to_add: the minutes we have already determined should be added to the time.
     :return: current_time_object with minutes updated by minutes_to_add
+    Time Complexity: O(1)
     Space Complexity: O(1)
 
     Time objects does not have an add time method, so this function was modified from question 59465525 on
     Stackoverflow to take a time object and add a set amount of minutes to it.
-
     """
     full_date = datetime.datetime(100, 1, 1, current_time_object.hour, current_time_object.minute,
                                   current_time_object.second)
@@ -54,11 +55,10 @@ def create_and_hash_package_objects(matrix):
     :param matrix: The packages matrix pulled from the CSV
     :return: None. The already initialized hashtable will be filled.
     Time Complexity: O(n)
-    Space Complexity:
+    Space Complexity: O(n)
 
     This function places each row of the provided matrix into a package object, which is then hashed into the hash table
     """
-
     for inner_list in matrix:
         package = Package.Package(
             int(inner_list[0]),  # ID, converted to Int from CSV's string.
@@ -82,8 +82,8 @@ def distance_to_next_address(current_package_location, destination):
     :param current_package_location: where the truck (and therefore package) currently is
     :param destination: where we want the package to go.
     :return: the distance in miles to the next address according to the distance table
-    Time Complexity: O(n) - since we are only searching top row for address, it is N + N, not N * N
-    Space Complexity:
+    Time Complexity: O(n) - (since we are only searching top row for address, it is N + N, not N * N)
+    Space Complexity: O(n)
     """
     current_address_row = []  # initialize variable for row check
     for row in distance_matrix:  # iterate over rows in distance table
@@ -112,7 +112,8 @@ def determine_shortest_address(current_address, truck):
     :param current_address: The address that the truck is currently at.
     :param truck: the list which abstracts the truck and the current packages it holds.
     :return: the best address to go to for delivery
-    Complexity: 0(n^2)
+    Time Complexity: 0(n^2)
+    Space Complexity: 0(n^2)
 
     This function takes the current address of the truck, examines its current contents, and determines the next best
     location to travel to based on the nearest neighbor algorithm.
@@ -140,8 +141,8 @@ def execute_truck_delivery(truck_with_number, departing_time, status_statements)
     :param status_statements: a boolean which either turns the status statements on or off.
     :param departing_time: The time the truck will leave to start deliveries
     :return: The time after the deliveries have completed.
-    Time Complexity:
-    Space Complexity:
+    Time Complexity: O(n^2)
+    Space Complexity: O(n^2)
 
     This function delivers all the packages of a given truck and returns it to the hub. It always calls the nearest
     neighbor function from its location to determine the closest next location to make deliveries to.
@@ -239,12 +240,12 @@ def verify_delivery_on_time():
 
 def status_update(status_time):
     """
-    :param status_time: A time object to be checked against.
-    :return:None.
+    :param status_time: A time object to be checked against
+    :return:None
     Time Complexity: O(n)
     Space Complexity: O(n)
 
-    This function prints out the status of all deliveries at a given time.
+    This function prints out the status of all deliveries at a given time
     """
     for p_id in range(1, 41):
         package = hashtable.lookup(p_id)
@@ -260,10 +261,10 @@ def execute_program(show_status):
     """
     :param show_status: Boolean for if status statements to be shown
     :return: None.
-    Time Complexity:
-    Space Complexity:
+    Time Complexity: O(n^2)
+    Space Complexity: O(n^2)
 
-    A function that executes the deliveries for all three trucks.
+    A function that executes the deliveries for all three trucks
     """
     # Set the departure time for the first two trucks
     depart_time_for_truck_1 = datetime.time(8, 00, 00)  # truck 1 leaves at the start of the day.

@@ -1,13 +1,13 @@
 # This file contains functions written for testing and verification purposes.
-
+#
 # TESTING DISTANCE_TO_NEXT_ADDRESS():
 # with_zip = distance_matrix[0][3]  # sample starting address. Has a zip attached
 # a = CSV_Import.remove_zip(with_zip)  # I have to remove zip to make comparison
 # package = hashtable.search(3)  # sample random package
 # b = package.address  # sample destination from said package
 # distance_to_next_address(a, b)
-
-
+#
+#
 # def confirm_address_in_hashtable():
 #     for i in range(1, 41):
 #         package = hashtable.search(i)
@@ -22,4 +22,10 @@
 #             print(f"{i} not found for address {address_to_check}")
 #
 #
+# A HASH TABLE FUNCTION THAT JUST PRINTS THE CONTENTS OF THE HASH TABLES
+#
 # confirm_address_in_hashtable()
+#
+# def display(self):
+#     for item in self.table:
+#         print(item)
