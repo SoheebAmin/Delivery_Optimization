@@ -1,4 +1,4 @@
-# Delivery Optimization With self-build Hash Table
+# Delivery Optimization with Self-Built Hash Table
 
 This program runs a delivery algorithm by pulling data from two CSV files: packages.csv, which contains details about 40 different packages (including special delivery 
 conditions), and a distance table to provide the distance from one location to another.
