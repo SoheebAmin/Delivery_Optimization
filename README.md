@@ -10,4 +10,4 @@ The program includes verification functions for all deliveries as well as specif
 
 # Output of 40 deliveries
 
-![40 delivery output](Delivery_Optimization/Screenshots/Miles_and_Deadline_Verification.png?raw=true "Delivery Output")
+![40 delivery output](Screenshots/Miles_and_Deadline_Verification.png?raw=true "Delivery Output")
