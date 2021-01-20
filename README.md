@@ -13,6 +13,15 @@ The program includes verification functions for all deliveries as well as specif
 ![Algorithm Running](Screenshots/NN_Running.png?raw=true "Algorithm Running")
 
 
+
+
 ## Output of 40 deliveries
 
 ![40 Delivery Output](Screenshots/Miles_and_Deadline_Verification.png?raw=true "Delivery Output")
+
+
+
+
+## Custom Time Verification (10am example)
+
+![Custom Time Verification](Screenshots/All_packages_10am?raw=true "10am Verification")
