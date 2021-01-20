@@ -9,3 +9,5 @@ Packages are also modified to include their delivery time to ensure a timely del
 The program includes verification functions for all deliveries as well as specific delivery times.
 
 # Output of 40 deliveries
+
+![40 delivery output](Delivery_Optimization/Screenshots/Miles_and_Deadline_Verification.png?raw=true "Delivery Output")
