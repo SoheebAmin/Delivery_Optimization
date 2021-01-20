@@ -24,4 +24,4 @@ The program includes verification functions for all deliveries as well as specif
 
 ## Custom Time Verification (10am example)
 
-![Custom Time Verification](Screenshots/All_packages_10am?raw=true "10am Verification")
+![Custom Time Verification](Screenshots/All_packages_10am.png?raw=true "10am Verification")
