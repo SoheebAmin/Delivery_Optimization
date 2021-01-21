@@ -12,16 +12,18 @@ The program includes verification functions for all deliveries as well as specif
 
 ![Algorithm Running](Screenshots/NN_Running.png?raw=true "Algorithm Running")
 
-
+The print statements make every delivery clear as the algorithm runs, providing updates on where the truck is, what packages it is delivering, and what the nearest neighbor algortithm is determining as the closest location to travel to next.
 
 
 ## Output of 40 deliveries
 
 ![40 Delivery Output](Screenshots/Miles_and_Deadline_Verification.png?raw=true "Delivery Output")
 
-
+The 40 packages objects all have their delivery times appended to them as a field. This delivery time is then compared to the the the stated deadline field (with some data and type manipulation) and then the results are shown to confirm all deliveries were on time.
 
 
 ## Custom Time Verification (10am example)
 
 ![Custom Time Verification](Screenshots/All_packages_10am.png?raw=true "10am Verification")
+
+The user can input any time that day, and be given the delivery status of every package at that time of day.
